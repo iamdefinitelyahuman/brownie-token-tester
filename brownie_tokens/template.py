@@ -32,6 +32,28 @@ def ERC20(
     success: Union[bool, None] = True,
     fail: Union[bool, str, None] = "revert",
 ) -> Contract:
+    """
+    Deploy an ERC20 contract for testing purposes.
+
+    Arguments
+    ---------
+    name : str, optional
+        Full name of the token.
+    symbol: str, optional
+        Short symbol for the token.
+    decimals : int, optional
+        Number of token decimal places.
+    success : bool | None, optional
+        Value returned upon successful transfer or approval.
+    fail : bool | None | str, optional
+        Value or action upon failed transfer or approval. Use "revert"
+        to make the transaction revert.
+
+    Returns
+    -------
+    Contract
+        Deployed ERC20 contract
+    """
     if success not in RETURN_STATEMENT:
         valid_keys = [str(i) for i in RETURN_STATEMENT.keys()]
         raise ValueError(f"Invalid value for `success`, valid options are: {', '.join(valid_keys)}")

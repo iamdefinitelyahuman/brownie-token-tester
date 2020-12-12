@@ -23,6 +23,10 @@ def get_top_holders(address: str) -> List:
 
 
 class MintableForkToken(Contract):
+    """
+    ERC20 wrapper for forked mainnet tests that allows standardized token minting.
+    """
+
     def _mint_for_testing(self, target: str, amount: Wei, tx: Dict = None) -> None:
         # check for custom minting logic
         fn_name = f"mint_{self.address}"
