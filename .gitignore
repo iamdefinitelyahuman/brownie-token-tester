@@ -1,0 +1,17 @@
+__pycache__
+.vscode
+.history
+.coverage
+.coverage.*
+build/
+coverage.xml
+dist/
+docs/_build
+venv/
+env/
+*egg-info/
+.tox/
+.mypy_cache/
+.idea/
+.DS_Store
+.hypothesis/

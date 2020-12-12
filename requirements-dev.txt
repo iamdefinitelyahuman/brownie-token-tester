@@ -1,0 +1,10 @@
+black==19.10b0
+bumpversion==0.5.3
+flake8==3.8.3
+isort==5.4.2
+mypy==0.782
+pytest>=6.0.0,<7.0.0
+pytest-cov==2.10.1
+tox==3.19.0
+twine==3.2.0
+wheel==0.35.1
