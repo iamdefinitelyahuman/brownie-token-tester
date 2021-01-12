@@ -21,6 +21,12 @@ FAIL_STATEMENT = {
     None: "return",
 }
 
+STRING_CONVERT = {
+    "true": True,
+    "false": False,
+    "none": None,
+}
+
 with Path(__file__).parent.joinpath("token-template.vy").open() as fp:
     TEMPLATE = fp.read()
 
@@ -29,7 +35,7 @@ def ERC20(
     name: str = "Test Token",
     symbol: str = "TST",
     decimals: int = 18,
-    success: Union[bool, None] = True,
+    success: Union[bool, str, None] = True,
     fail: Union[bool, str, None] = "revert",
 ) -> Contract:
     """
@@ -54,6 +60,12 @@ def ERC20(
     Contract
         Deployed ERC20 contract
     """
+    # understand success and fail when given as strings
+    if isinstance(success, str) and success.lower() in STRING_CONVERT:
+        success = STRING_CONVERT[success.lower()]
+    if isinstance(fail, str) and fail.lower() in STRING_CONVERT:
+        fail = STRING_CONVERT[fail.lower()]
+
     if success not in RETURN_STATEMENT:
         valid_keys = [str(i) for i in RETURN_STATEMENT.keys()]
         raise ValueError(f"Invalid value for `success`, valid options are: {', '.join(valid_keys)}")
@@ -66,7 +78,7 @@ def ERC20(
         return_statement=RETURN_STATEMENT[success],
         fail_statement=FAIL_STATEMENT[fail],
     )
-    deployer = compile_source(source).Vyper
+    deployer = compile_source(source, vyper_version="0.2.8").Vyper
 
     return deployer.deploy(
         name,
