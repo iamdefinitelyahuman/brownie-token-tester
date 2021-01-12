@@ -78,7 +78,7 @@ def ERC20(
         return_statement=RETURN_STATEMENT[success],
         fail_statement=FAIL_STATEMENT[fail],
     )
-    deployer = compile_source(source).Vyper
+    deployer = compile_source(source, vyper_version="0.2.8").Vyper
 
     return deployer.deploy(
         name,
