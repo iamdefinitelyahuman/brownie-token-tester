@@ -31,7 +31,7 @@ def __init__(_name: String[64], _symbol: String[32], _decimals: uint256):
 
 @external
 def transfer(_to : address, _value : uint256){return_type}:
-    if self.balanceOf[_to] < _value:
+    if self.balanceOf[msg.sender] < _value:
         {fail_statement}
     self.balanceOf[msg.sender] -= _value
     self.balanceOf[_to] += _value
