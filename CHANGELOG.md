@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
 
+## [0.0.3](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.0.3) - 2021-01-13
+### Fixed
+- `ERC20.transfer` bug
+
 ## [0.0.2](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.0.2) - 2021-01-12
 ### Fixed
 - Improved handling of string types for `success` and `revert` kwargs in `ERC20` init
