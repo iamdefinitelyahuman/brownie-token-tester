@@ -6,6 +6,8 @@ from typing import Dict, List
 
 _token_holders: Dict = {}
 
+_token_names = ["Aave"]
+
 
 def get_top_holders(address: str) -> List:
     address = to_address(address)
@@ -33,6 +35,16 @@ class MintableForkToken(Contract):
         if hasattr(sys.modules[__name__], fn_name):
             getattr(sys.modules[__name__], fn_name)(self, target, amount)
             return
+
+        # check for token name if no custom minting
+        # logic exists for address
+        for name in _token_names:
+            if self.name().startswith(name):
+                fn_name = f"mint_{name}"
+                if hasattr(sys.modules[__name__], fn_name):
+                    getattr(sys.modules[__name__], fn_name)(
+                        self, self.UNDERLYING_ASSET_ADDRESS(), amount)
+                    return
 
         # if no custom logic, fetch a list of the top
         # token holders and start stealing from them
@@ -74,3 +86,34 @@ def mint_0x674C6Ad92Fd080e4004b2312b45f796a192D27a0(
 ) -> None:
     # USDN
     token.deposit(target, amount, {"from": "0x90f85042533F11b362769ea9beE20334584Dcd7D"})
+
+
+def mint_0x5228a22e72ccC52d415EcFd199F99D0665E7733b(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # pBTC
+    token.mint(target, amount, {'from': "0x3423Fb35149875e965f06c926DA8BA82D63f7ddb"})
+
+
+def mint_0x4A64515E5E1d1073e83f30cB97BEd20400b66E10(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # wZEC
+    token.mint(target, amount, {"from": "0x5Ca1262e25A5Fb6CA8d74850Da2753f0c896e16c"})
+
+
+def mint_0x1C5db575E2Ff833E46a2E9864C22F4B22E0B37C2(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # renZEC
+    token.mint(target, amount, {"from": "0xc3BbD5aDb611dd74eCa6123F05B18acc886e122D"})
+
+
+def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
+    # aave token
+    lending_pool = Contract(
+        "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9")
+    token._mint_for_testing(target, amount)
+    token.approve(lending_pool, amount, {'from': target})
+    lending_pool.deposit(token, amount,
+                         target, 0, {'from': target})
