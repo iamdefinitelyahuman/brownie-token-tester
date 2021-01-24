@@ -77,7 +77,7 @@ This method increases the balance of `target` by `amount`. It may be called by a
 
 For tokens where [custom logic is implemented](https://github.com/iamdefinitelyahuman/brownie-token-tester/blob/master/brownie_tokens/forked.py#L52), this is an actual minting event. For most tokens, the "minting" process involves a query to the [Ethplorer API](https://github.com/EverexIO/Ethplorer/wiki/Ethplorer-API#get-top-token-holders) to get a list of top token holders, and then transferring their balances to `target`.
 
-Tokens for which `brownie-testing-tokens` currently implements custom minting logic are:
+Tokens for which custom logic is currently implemented:
 
 - [x] Aave tokens
 - [x] LinkUSD
