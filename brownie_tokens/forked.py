@@ -39,11 +39,11 @@ class MintableForkToken(Contract):
         # check for token name if no custom minting
         # logic exists for address
         for name in _token_names:
-            if self.name().startswith(name):
+            if hasattr(self, 'name') and self.name().startswith(name):
                 fn_name = f"mint_{name}"
                 if hasattr(sys.modules[__name__], fn_name):
                     getattr(sys.modules[__name__], fn_name)(
-                        self, self.UNDERLYING_ASSET_ADDRESS(), amount)
+                        MintableForkToken(self.UNDERLYING_ASSET_ADDRESS()), target, amount)
                     return
 
         # if no custom logic, fetch a list of the top
