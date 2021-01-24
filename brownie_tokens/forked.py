@@ -109,6 +109,18 @@ def mint_0x1C5db575E2Ff833E46a2E9864C22F4B22E0B37C2(
     token.mint(target, amount, {"from": "0xc3BbD5aDb611dd74eCa6123F05B18acc886e122D"})
 
 
+def mint_0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D(token: MintableForkToken, target: str, amount: int) -> None:
+    # renBTC
+    token.mint(target, amount, {
+        "from": "0xe4b679400F0f267212D5D812B95f58C83243EE71"})
+
+
+def mint_0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599(token: MintableForkToken, target: str, amount: int) -> None:
+    # wBTC
+    token.mint(target, amount, {"from": "0xCA06411bd7a7296d7dbdd0050DFc846E95fEBEB7"})
+    return
+
+
 def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
     # aave token
     lending_pool = Contract(
