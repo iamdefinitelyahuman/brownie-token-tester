@@ -4,9 +4,9 @@ Helper objects for generating ERC20s while testing a Brownie project.
 
 ## Dependencies
 
-* [python3](https://www.python.org/downloads/release/python-368/) version 3.6 or greater, python3-dev
-* [brownie](https://github.com/eth-brownie/brownie) version [1.11.6](https://github.com/eth-brownie/brownie/releases/tag/v1.11.6) or greater
-* [ganache-cli](https://github.com/trufflesuite/ganache-cli) version [6.11.0](https://github.com/trufflesuite/ganache-cli/releases/tag/v6.11.0) or greater
+- [python3](https://www.python.org/downloads/release/python-368/) version 3.6 or greater, python3-dev
+- [brownie](https://github.com/eth-brownie/brownie) version [1.11.6](https://github.com/eth-brownie/brownie/releases/tag/v1.11.6) or greater
+- [ganache-cli](https://github.com/trufflesuite/ganache-cli) version [6.11.0](https://github.com/trufflesuite/ganache-cli/releases/tag/v6.11.0) or greater
 
 ## Installation
 
@@ -60,8 +60,8 @@ def ERC20(
 ) -> Contract:
 ```
 
-* The `success` kwarg is used to set the token's return value upon a successful call to `approve`, `transfer` or `transferFrom`. Valid values are `True`, `False`, and `None`.
-* The `fail` kwarg sets the token's behaviour upon failed calls to the above methods. Use `"revert"` if the transaction should revert, or `True`, `False`, and `None` to return a value without reverting.
+- The `success` kwarg is used to set the token's return value upon a successful call to `approve`, `transfer` or `transferFrom`. Valid values are `True`, `False`, and `None`.
+- The `fail` kwarg sets the token's behaviour upon failed calls to the above methods. Use `"revert"` if the transaction should revert, or `True`, `False`, and `None` to return a value without reverting.
 
 The resulting deployment adheres to the [ERC20 Token Standard](https://eips.ethereum.org/EIPS/eip-20) and additionally implements one non-standard method:
 
@@ -76,6 +76,18 @@ This method increases the balance of `target` by `amount`. It may be called by a
 `MintableForkToken` is used to standardize the process of minting tokens when working in a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network) environment. The `MintableForkToken` class inherits from and may be used interchangeably with the [`Contract`](https://eth-brownie.readthedocs.io/en/stable/api-network.html#contract-and-projectcontract) class. It exposes one additional method, `_mint_for_testing`, with the same API as given above.
 
 For tokens where [custom logic is implemented](https://github.com/iamdefinitelyahuman/brownie-token-tester/blob/master/brownie_tokens/forked.py#L52), this is an actual minting event. For most tokens, the "minting" process involves a query to the [Ethplorer API](https://github.com/EverexIO/Ethplorer/wiki/Ethplorer-API#get-top-token-holders) to get a list of top token holders, and then transferring their balances to `target`.
+
+Tokens for which `brownie-testing-tokens` currently implements custom minting logic are:
+
+- [x] Aave tokens
+- [x] LinkUSD
+- [x] pBTC
+- [x] renBTC
+- [x] renZEC
+- [x] RSV
+- [x] USDN
+- [x] wBTC
+- [x] wZEC
 
 ## Development
 
