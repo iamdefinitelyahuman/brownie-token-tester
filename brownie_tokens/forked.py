@@ -42,8 +42,7 @@ class MintableForkToken(Contract):
             if hasattr(self, 'name') and self.name().startswith(name):
                 fn_name = f"mint_{name}"
                 if hasattr(sys.modules[__name__], fn_name):
-                    getattr(sys.modules[__name__], fn_name)(
-                        MintableForkToken(self.UNDERLYING_ASSET_ADDRESS()), target, amount)
+                    getattr(sys.modules[__name__], fn_name)(self, target, amount)
                     return
 
         # if no custom logic, fetch a list of the top
@@ -140,6 +139,7 @@ def mint_0x4A64515E5E1d1073e83f30cB97BEd20400b66E10(
 
 def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
     # aave token
+    token = MintableForkToken(token.UNDERLYING_ASSET_ADDRESS())
     lending_pool = Contract(
         "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9")
     token._mint_for_testing(target, amount)
