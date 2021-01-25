@@ -1,27 +1,27 @@
 from brownie import Contract, compile_source
 from pathlib import Path
-from typing import Union
+from typing import Dict, Union
 
-RETURN_TYPE = {
+RETURN_TYPE: Dict = {
     True: " -> bool",
     False: " -> bool",
     None: "",
 }
 
-RETURN_STATEMENT = {
+RETURN_STATEMENT: Dict = {
     True: "return True",
     False: "return False",
     None: "return",
 }
 
-FAIL_STATEMENT = {
+FAIL_STATEMENT: Dict = {
     "revert": "raise",
     True: "return True",
     False: "return False",
     None: "return",
 }
 
-STRING_CONVERT = {
+STRING_CONVERT: Dict = {
     "true": True,
     "false": False,
     "none": None,
