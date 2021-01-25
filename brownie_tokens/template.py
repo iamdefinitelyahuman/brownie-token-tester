@@ -72,6 +72,8 @@ def ERC20(
     if fail not in FAIL_STATEMENT:
         valid_keys = [str(i) for i in FAIL_STATEMENT.keys()]
         raise ValueError(f"Invalid value for `fail`, valid options are: {', '.join(valid_keys)}")
+    if None in (fail, success) and fail is not success:
+        raise ValueError("Cannot use `None` for only one of `success` and `fail`.")
 
     source = TEMPLATE.format(
         return_type=RETURN_TYPE[success],
