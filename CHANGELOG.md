@@ -6,6 +6,8 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
+- Add custom minting logic for tokens: pBTC, wZEC, renZEC, renBTC, wBTC, sBTC, tBTC, aave tokens
+- `forked.py`: Add handling of custom minting logic if token name starts with a specified prefix (e.g. 'AAVE') and custom minting logic for address does not exist
 
 ## [0.0.3](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.0.3) - 2021-01-13
 ### Fixed
