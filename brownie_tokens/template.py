@@ -1,27 +1,27 @@
 from brownie import Contract, compile_source
 from pathlib import Path
-from typing import Union
+from typing import Dict, Union
 
-RETURN_TYPE = {
+RETURN_TYPE: Dict = {
     True: " -> bool",
     False: " -> bool",
     None: "",
 }
 
-RETURN_STATEMENT = {
+RETURN_STATEMENT: Dict = {
     True: "return True",
     False: "return False",
     None: "return",
 }
 
-FAIL_STATEMENT = {
+FAIL_STATEMENT: Dict = {
     "revert": "raise",
     True: "return True",
     False: "return False",
     None: "return",
 }
 
-STRING_CONVERT = {
+STRING_CONVERT: Dict = {
     "true": True,
     "false": False,
     "none": None,
@@ -72,6 +72,8 @@ def ERC20(
     if fail not in FAIL_STATEMENT:
         valid_keys = [str(i) for i in FAIL_STATEMENT.keys()]
         raise ValueError(f"Invalid value for `fail`, valid options are: {', '.join(valid_keys)}")
+    if None in (fail, success) and fail is not success:
+        raise ValueError("Cannot use `None` for only one of `success` and `fail`.")
 
     source = TEMPLATE.format(
         return_type=RETURN_TYPE[success],
