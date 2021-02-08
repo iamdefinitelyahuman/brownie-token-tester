@@ -80,6 +80,7 @@ def mint_0x6B175474E89094C44Da98b954EedeAC495271d0F(
     # DAI
     token.mint(target, amount, {"from": "0x9759A6Ac90977b93B58547b4A71c78317f391A28"})
 
+
 def mint_0xdB25f211AB05b1c97D595516F45794528a807ad8(
     token: MintableForkToken, target: str, amount: int
 ) -> None:

@@ -80,13 +80,20 @@ For tokens where [custom logic is implemented](https://github.com/iamdefinitelya
 Tokens for which custom logic is currently implemented:
 
 - [x] Aave tokens
+- [x] DAI
+- [x] EURS
 - [x] LinkUSD
 - [x] pBTC
 - [x] renBTC
 - [x] renZEC
 - [x] RSV
+- [x] USDC
 - [x] USDN
+- [x] USDT
 - [x] sBTC
+- [x] sETH
+- [x] sEURS
+- [x] sUSD
 - [x] tBTC
 - [x] wBTC
 - [x] wZEC
