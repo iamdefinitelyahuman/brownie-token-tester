@@ -33,6 +33,7 @@ class MintableForkToken(Contract):
     """
     ERC20 wrapper for forked mainnet tests that allows standardized token minting.
     """
+
     def __init__(self, address):
         if address in _proxy_contracts.keys():
             address = _proxy_contracts[address]
@@ -187,7 +188,7 @@ def mint_0xB7277a6e95992041568D9391D09d0122023778A2(
     # USDC
     # dev: mint from implementation (not from proxy)
     minter = "0x0000000000000000000000000000000000000001"
-    token.configureMinter(minter, amount , {"from": minter})
+    token.configureMinter(minter, amount, {"from": minter})
     token.mint(target, amount, {"from": minter})
 
 
