@@ -1,17 +1,13 @@
-import requests
 import sys
+from typing import Dict, List
+
+import requests
 from brownie import Contract, Wei
 from brownie.convert import to_address
-from typing import Dict, List
 
 _token_holders: Dict = {}
 
 _token_names = ["Aave"]
-
-# dev: mapping of proxy contracts to implementation
-_proxy_contracts = {
-    "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "0xb7277a6e95992041568d9391d09d0122023778a2",  # USDC
-}
 
 
 def get_top_holders(address: str) -> List:
@@ -35,8 +31,6 @@ class MintableForkToken(Contract):
     """
 
     def __init__(self, address):
-        if address in _proxy_contracts.keys():
-            address = _proxy_contracts[address]
         super().__init__(address)
 
     def _mint_for_testing(self, target: str, amount: Wei, tx: Dict = None) -> None:
@@ -73,6 +67,15 @@ class MintableForkToken(Contract):
 
 # to add custom minting logic, add a function named `mint_[CHECKSUMMED_ADDRESS]`
 # be sure to include a comment with the symbol of the token
+
+
+def mint_0xE95A203B1a91a908F9B9CE46459d101078c2c3cb(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # aETH (ankrETH)
+    owner = "0x2ffc59d32a524611bb891cab759112a51f9e33c0"
+    token.updateGlobalPoolContract(owner, {"from": owner})
+    token.mint(target, amount, {"from": owner})
 
 
 def mint_0x6B175474E89094C44Da98b954EedeAC495271d0F(
@@ -131,7 +134,7 @@ def mint_0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sBTC
-    target_contract = Contract("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
+    target_contract = Contract.from_explorer("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -139,7 +142,7 @@ def mint_0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sETH
-    target_contract = Contract("0x87641989057242Bff28D0D6108d007C79774D06f")
+    target_contract = Contract.from_explorer("0x87641989057242Bff28D0D6108d007C79774D06f")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -147,7 +150,7 @@ def mint_0xD71eCFF9342A5Ced620049e616c5035F1dB98620(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sEURS
-    target_contract = Contract("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
+    target_contract = Contract.from_explorer("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -155,7 +158,7 @@ def mint_0x57Ab1ec28D129707052df4dF418D58a2D46d5f51(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sUSD
-    target_contract = Contract("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
+    target_contract = Contract.from_explorer("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -182,12 +185,11 @@ def mint_0x674C6Ad92Fd080e4004b2312b45f796a192D27a0(
     token.deposit(target, amount, {"from": "0x90f85042533F11b362769ea9beE20334584Dcd7D"})
 
 
-def mint_0xB7277a6e95992041568D9391D09d0122023778A2(
+def mint_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # USDC
-    # dev: mint from implementation (not from proxy)
-    minter = "0x0000000000000000000000000000000000000001"
+    minter = "0xe982615d461dd5cd06575bbea87624fda4e3de17"
     token.configureMinter(minter, amount, {"from": minter})
     token.mint(target, amount, {"from": minter})
 
