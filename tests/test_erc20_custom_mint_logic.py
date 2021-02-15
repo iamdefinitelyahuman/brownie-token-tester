@@ -8,7 +8,7 @@ from brownie_tokens import MintableForkToken
 tokens = [f.split("_")[1] for f in dir(brownie_tokens.forked) if f[:4] == "mint" and f[5] == "0"]
 
 
-def ERC20(address):
+def ERC20(address: str) -> MintableForkToken:
     return MintableForkToken(Contract.from_explorer(address))
 
 

@@ -29,7 +29,7 @@ class MintableForkToken(Contract):
     ERC20 wrapper for forked mainnet tests that allows standardized token minting.
     """
 
-    def __init__(self, address):
+    def __init__(self, address: str):
         super().__init__(address)
 
     def _mint_for_testing(self, target: str, amount: Wei, tx: Dict = None) -> None:
