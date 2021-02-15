@@ -1,9 +1,8 @@
-import sys
-from typing import Dict, List
-
 import requests
+import sys
 from brownie import Contract, Wei
 from brownie.convert import to_address
+from typing import Dict, List
 
 _token_holders: Dict = {}
 
