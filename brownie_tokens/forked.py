@@ -29,9 +29,6 @@ class MintableForkToken(Contract):
     ERC20 wrapper for forked mainnet tests that allows standardized token minting.
     """
 
-    def __init__(self, address: str):
-        super().__init__(address)
-
     def _mint_for_testing(self, target: str, amount: Wei, tx: Dict = None) -> None:
         # check for custom minting logic
         fn_name = f"mint_{self.address}"
@@ -133,7 +130,7 @@ def mint_0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sBTC
-    target_contract = Contract.from_explorer("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
+    target_contract = Contract("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -141,7 +138,7 @@ def mint_0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sETH
-    target_contract = Contract.from_explorer("0x87641989057242Bff28D0D6108d007C79774D06f")
+    target_contract = Contract("0x87641989057242Bff28D0D6108d007C79774D06f")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -149,7 +146,7 @@ def mint_0xD71eCFF9342A5Ced620049e616c5035F1dB98620(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sEURS
-    target_contract = Contract.from_explorer("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
+    target_contract = Contract("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
@@ -157,7 +154,7 @@ def mint_0x57Ab1ec28D129707052df4dF418D58a2D46d5f51(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # Synth sUSD
-    target_contract = Contract.from_explorer("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
+    target_contract = Contract("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
