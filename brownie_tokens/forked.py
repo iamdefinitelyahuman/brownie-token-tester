@@ -65,6 +65,31 @@ class MintableForkToken(Contract):
 # be sure to include a comment with the symbol of the token
 
 
+def mint_0xE95A203B1a91a908F9B9CE46459d101078c2c3cb(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # aETH (ankrETH)
+    owner = "0x2ffc59d32a524611bb891cab759112a51f9e33c0"
+    token.updateGlobalPoolContract(owner, {"from": owner})
+    token.mint(target, amount, {"from": owner})
+
+
+def mint_0x6B175474E89094C44Da98b954EedeAC495271d0F(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # DAI
+    token.mint(target, amount, {"from": "0x9759A6Ac90977b93B58547b4A71c78317f391A28"})
+
+
+def mint_0xdB25f211AB05b1c97D595516F45794528a807ad8(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # EURS
+    owner = "0x2EbBbc541E8f8F24386FA319c79CedA0579f1Efb"
+    token.createTokens(amount, {"from": owner})
+    token.transfer(target, amount, {"from": owner})
+
+
 def mint_0x0E2EC54fC0B509F445631Bf4b91AB8168230C752(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
@@ -109,11 +134,44 @@ def mint_0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6(
     target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
 
 
+def mint_0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # Synth sETH
+    target_contract = Contract("0x87641989057242Bff28D0D6108d007C79774D06f")
+    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
+
+
+def mint_0xD71eCFF9342A5Ced620049e616c5035F1dB98620(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # Synth sEURS
+    target_contract = Contract("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
+    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
+
+
+def mint_0x57Ab1ec28D129707052df4dF418D58a2D46d5f51(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # Synth sUSD
+    target_contract = Contract("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
+    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
+
+
 def mint_0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # tBTC
     token.mint(target, amount, {"from": "0x526c08E5532A9308b3fb33b7968eF78a5005d2AC"})
+
+
+def mint_0xdAC17F958D2ee523a2206206994597C13D831ec7(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # USDT
+    owner = "0xc6cde7c39eb2f0f0095f41570af89efc2c1ea828"
+    token.issue(amount, {"from": owner})
+    token.transfer(target, amount, {"from": owner})
 
 
 def mint_0x674C6Ad92Fd080e4004b2312b45f796a192D27a0(
@@ -123,12 +181,20 @@ def mint_0x674C6Ad92Fd080e4004b2312b45f796a192D27a0(
     token.deposit(target, amount, {"from": "0x90f85042533F11b362769ea9beE20334584Dcd7D"})
 
 
+def mint_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # USDC
+    minter = "0xe982615d461dd5cd06575bbea87624fda4e3de17"
+    token.configureMinter(minter, amount, {"from": minter})
+    token.mint(target, amount, {"from": minter})
+
+
 def mint_0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # wBTC
     token.mint(target, amount, {"from": "0xCA06411bd7a7296d7dbdd0050DFc846E95fEBEB7"})
-    return
 
 
 def mint_0x4A64515E5E1d1073e83f30cB97BEd20400b66E10(
