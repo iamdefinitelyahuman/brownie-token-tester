@@ -1,4 +1,5 @@
 from brownie import Contract, compile_source
+from brownie.network.account import Account
 from pathlib import Path
 from typing import Dict, Union
 
@@ -37,6 +38,7 @@ def ERC20(
     decimals: int = 18,
     success: Union[bool, str, None] = True,
     fail: Union[bool, str, None] = "revert",
+    deployer: Union[Account, str, None] = None,
 ) -> Contract:
     """
     Deploy an ERC20 contract for testing purposes.
@@ -49,11 +51,13 @@ def ERC20(
         Short symbol for the token.
     decimals : int, optional
         Number of token decimal places.
-    success : bool | None, optional
+    success : bool, optional
         Value returned upon successful transfer or approval.
-    fail : bool | None | str, optional
+    fail : bool | str, optional
         Value or action upon failed transfer or approval. Use "revert"
         to make the transaction revert.
+    deployer: Account | str, optional
+        Address to deploy the contract from.
 
     Returns
     -------
@@ -80,11 +84,10 @@ def ERC20(
         return_statement=RETURN_STATEMENT[success],
         fail_statement=FAIL_STATEMENT[fail],
     )
-    deployer = compile_source(source, vyper_version="0.2.11").Vyper
+    contract = compile_source(source, vyper_version="0.2.11").Vyper
 
-    return deployer.deploy(
-        name,
-        symbol,
-        decimals,
-        {"from": "0x0000000000000000000000000000000000001337", "silent": True},
-    )
+    if deployer is None:
+        tx_params = {"from": "0x0000000000000000000000000000000000001337", "silent": True}
+    else:
+        tx_params = {"from": deployer}
+    return contract.deploy(name, symbol, decimals, tx_params)
