@@ -86,6 +86,7 @@ Tokens for which custom logic is currently implemented:
 - [x] pBTC
 - [x] renBTC
 - [x] renZEC
+- [x] rETH
 - [x] RSV
 - [x] USDC
 - [x] USDN
