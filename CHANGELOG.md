@@ -6,10 +6,9 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
-
 ### Added
 
-- Custom minting logic for: USDC, DAI, USDT, EURS, sEURS, sETH, sUSD, ankrETH
+- Custom minting logic for: USDC, DAI, USDT, EURS, sEURS, sETH, sUSD, ankrETH, rETH
 - Add fork tests for custom minting logic
 
 ## [0.1.0](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.1.0) - 2021-01-25
