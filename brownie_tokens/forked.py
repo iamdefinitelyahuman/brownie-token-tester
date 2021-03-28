@@ -204,6 +204,15 @@ def mint_0x4A64515E5E1d1073e83f30cB97BEd20400b66E10(
     token.mint(target, amount, {"from": "0x5Ca1262e25A5Fb6CA8d74850Da2753f0c896e16c"})
 
 
+def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # rETH
+    MINTER_ROLE = "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6"
+    minter = token.getRoleMember(MINTER_ROLE, 0)
+    token.mint(target, amount, {"from": minter})
+
+
 # to add custom minting logic for a token that starts with [NAME], add [NAME] to
 # `_token_names` and add a function `mint_[NAME]`
 
