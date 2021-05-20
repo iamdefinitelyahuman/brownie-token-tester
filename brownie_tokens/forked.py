@@ -131,7 +131,7 @@ def mint_0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6(
 ) -> None:
     # Synth sBTC
     target_contract = Contract("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
-    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
+    target_contract.issue(target, amount, {"from": "0xB774711F0BC1306ce892ef8C02D0476dCccB46B7"})
 
 
 def mint_0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb(
@@ -210,6 +210,17 @@ def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
     # rETH
     MINTER_ROLE = "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6"
     minter = token.getRoleMember(MINTER_ROLE, 0)
+    token.mint(target, amount, {"from": minter})
+
+
+# Curve LP tokens
+
+
+def mint_0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # Curve renBTC/wBTC/sBTC LP Token
+    minter = "0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714"
     token.mint(target, amount, {"from": minter})
 
 
