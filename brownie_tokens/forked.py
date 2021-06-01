@@ -36,13 +36,13 @@ class MintableForkToken(Contract):
             getattr(sys.modules[__name__], fn_name)(self, target, amount)
             return
 
-        # check for token name if no custom minting
-        # logic exists for address
-        for name in _token_names:
-            if hasattr(self, "name") and self.name().startswith(name):
-                fn_name = f"mint_{name}"
-                if hasattr(sys.modules[__name__], fn_name):
-                    getattr(sys.modules[__name__], fn_name)(self, target, amount)
+        # check for token name if no custom minting logic exists for address
+        if hasattr(self, "name") and not self.name.abi["inputs"]:
+            name = self.name()
+            fn_name = next((f"mint_{i}" for i in _token_names if name.startswith(i)), "")
+            if fn_name and hasattr(sys.modules[__name__], fn_name):
+                mint_result = getattr(sys.modules[__name__], fn_name)(self, target, amount)
+                if mint_result:
                     return
 
         # if no custom logic, fetch a list of the top
@@ -229,8 +229,9 @@ def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
     token.mint(target, amount, {"from": minter})
 
 
-# to add custom minting logic for a token that starts with [NAME], add [NAME] to
-# `_token_names` and add a function `mint_[NAME]`
+# To add custom minting logic for a token that starts with [NAME], add [NAME] to `_token_names`
+# and add a function `mint_[NAME]`. The function should include sanity-checks to prevent false
+# positives, and return a bool indicating if the mint operation was successful.
 
 
 def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
