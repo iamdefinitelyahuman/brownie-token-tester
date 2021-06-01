@@ -234,10 +234,14 @@ def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
 # positives, and return a bool indicating if the mint operation was successful.
 
 
-def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
-    # aave token
+def mint_Aave(token: MintableForkToken, target: str, amount: int) -> bool:
+    # aave aTokens
+    if not hasattr(token, "UNDERLYING_ASSET_ADDRESS"):
+        return False
+
     token = MintableForkToken(token.UNDERLYING_ASSET_ADDRESS())
     lending_pool = Contract("0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9")
     token._mint_for_testing(target, amount)
     token.approve(lending_pool, amount, {"from": target})
     lending_pool.deposit(token, amount, target, 0, {"from": target})
+    return True
