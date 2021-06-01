@@ -84,6 +84,7 @@ Tokens for which custom logic is currently implemented:
 - [x] EURS
 - [x] LinkUSD
 - [x] pBTC
+- [x] Synthetix synths
 - [x] renBTC
 - [x] renZEC
 - [x] rETH
@@ -91,10 +92,6 @@ Tokens for which custom logic is currently implemented:
 - [x] USDC
 - [x] USDN
 - [x] USDT
-- [x] sBTC
-- [x] sETH
-- [x] sEURS
-- [x] sUSD
 - [x] tBTC
 - [x] wBTC
 - [x] wZEC

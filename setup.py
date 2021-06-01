@@ -12,7 +12,7 @@ setup(
     name="brownie-token-tester",
     packages=find_packages(exclude=["tests", "tests.*"]),
     py_modules=["brownie_tokens"],
-    version="0.2.1",  # don't change this manually, use bumpversion instead
+    version="0.2.2",  # don't change this manually, use bumpversion instead
     license="MIT",
     description="Helper objects for generating ERC20s while testing a Brownie project.",
     long_description=long_description,
