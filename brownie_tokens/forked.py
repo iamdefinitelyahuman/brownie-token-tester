@@ -36,13 +36,13 @@ class MintableForkToken(Contract):
             getattr(sys.modules[__name__], fn_name)(self, target, amount)
             return
 
-        # check for token name if no custom minting
-        # logic exists for address
-        for name in _token_names:
-            if hasattr(self, "name") and self.name().startswith(name):
-                fn_name = f"mint_{name}"
-                if hasattr(sys.modules[__name__], fn_name):
-                    getattr(sys.modules[__name__], fn_name)(self, target, amount)
+        # check for token name if no custom minting logic exists for address
+        if hasattr(self, "name") and not self.name.abi["inputs"]:
+            name = self.name()
+            fn_name = next((f"mint_{i}" for i in _token_names if name.startswith(i)), "")
+            if fn_name and hasattr(sys.modules[__name__], fn_name):
+                mint_result = getattr(sys.modules[__name__], fn_name)(self, target, amount)
+                if mint_result:
                     return
 
         # if no custom logic, fetch a list of the top
@@ -63,6 +63,22 @@ class MintableForkToken(Contract):
 
 # to add custom minting logic, add a function named `mint_[CHECKSUMMED_ADDRESS]`
 # be sure to include a comment with the symbol of the token
+
+
+def _snx_exchanger() -> str:
+    abi = [
+        {
+            "inputs": [{"name": "name", "type": "bytes32"}],
+            "name": "getAddress",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        }
+    ]
+    resolver = Contract.from_abi(
+        "AddressResolver", "0x4E3b31eB0E5CB73641EE1E65E7dCEFe520bA3ef2", abi
+    )
+    return resolver.getAddress("0x45786368616e6765720000000000000000000000000000000000000000000000")
 
 
 def mint_0xE95A203B1a91a908F9B9CE46459d101078c2c3cb(
@@ -126,38 +142,6 @@ def mint_0x196f4727526eA7FB1e17b2071B3d8eAA38486988(
     token.mint(target, amount, {"from": token.minter()})
 
 
-def mint_0xfE18be6b3Bd88A2D2A7f928d00292E7a9963CfC6(
-    token: MintableForkToken, target: str, amount: int
-) -> None:
-    # Synth sBTC
-    target_contract = Contract("0xDB91E4B3b6E19bF22E810C43273eae48C9037e74")
-    target_contract.issue(target, amount, {"from": "0xB774711F0BC1306ce892ef8C02D0476dCccB46B7"})
-
-
-def mint_0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb(
-    token: MintableForkToken, target: str, amount: int
-) -> None:
-    # Synth sETH
-    target_contract = Contract("0x87641989057242Bff28D0D6108d007C79774D06f")
-    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
-
-
-def mint_0xD71eCFF9342A5Ced620049e616c5035F1dB98620(
-    token: MintableForkToken, target: str, amount: int
-) -> None:
-    # Synth sEURS
-    target_contract = Contract("0xC61b352fCc311Ae6B0301459A970150005e74b3E")
-    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
-
-
-def mint_0x57Ab1ec28D129707052df4dF418D58a2D46d5f51(
-    token: MintableForkToken, target: str, amount: int
-) -> None:
-    # Synth sUSD
-    target_contract = Contract("0x6C85C5198C3CC4dB1b87Cb43b2674241a30f4845")
-    target_contract.issue(target, amount, {"from": "0x778D2d3E3515e42573EB1e6a8d8915D4a22D9d54"})
-
-
 def mint_0x8dAEBADE922dF735c38C80C7eBD708Af50815fAa(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
@@ -213,25 +197,44 @@ def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
     token.mint(target, amount, {"from": minter})
 
 
-# Curve LP tokens
+# To add custom minting logic for a token that starts with [NAME], add [NAME] to `_token_names`
+# and add a function `mint_[NAME]`. The function should include sanity-checks to prevent false
+# positives, and return a bool indicating if the mint operation was successful.
 
 
-def mint_0x075b1bb99792c9E1041bA13afEf80C91a1e70fB3(
-    token: MintableForkToken, target: str, amount: int
-) -> None:
-    # Curve renBTC/wBTC/sBTC LP Token
-    minter = "0x7fC77b5c7614E1533320Ea6DDc2Eb61fa00A9714"
-    token.mint(target, amount, {"from": minter})
+def mint_Aave(token: MintableForkToken, target: str, amount: int) -> bool:
+    # Aave aTokens
+    if not hasattr(token, "UNDERLYING_ASSET_ADDRESS"):
+        return False
 
-
-# to add custom minting logic for a token that starts with [NAME], add [NAME] to
-# `_token_names` and add a function `mint_[NAME]`
-
-
-def mint_Aave(token: MintableForkToken, target: str, amount: int) -> None:
-    # aave token
     token = MintableForkToken(token.UNDERLYING_ASSET_ADDRESS())
     lending_pool = Contract("0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9")
     token._mint_for_testing(target, amount)
     token.approve(lending_pool, amount, {"from": target})
     lending_pool.deposit(token, amount, target, 0, {"from": target})
+    return True
+
+
+def mint_Synth(token: MintableForkToken, target: str, amount: int) -> bool:
+    # Synthetix synths
+    if not hasattr(token, "target"):
+        return False
+
+    abi = [
+        {
+            "inputs": [{"name": "name", "type": "bytes32"}],
+            "name": "getAddress",
+            "outputs": [{"internalType": "uint256", "name": "", "type": "address"}],
+            "stateMutability": "view",
+            "type": "function",
+        }
+    ]
+    resolver = Contract.from_abi(
+        "AddressResolver", "0x4E3b31eB0E5CB73641EE1E65E7dCEFe520bA3ef2", abi
+    )
+    exchanger_key = "0x45786368616e6765720000000000000000000000000000000000000000000000"
+    exchanger = resolver.getAddress(exchanger_key)
+
+    target_contract = token.target()
+    target_contract.issue(target, amount, {"from": exchanger})
+    return True

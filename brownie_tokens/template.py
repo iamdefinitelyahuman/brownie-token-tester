@@ -84,7 +84,7 @@ def ERC20(
         return_statement=RETURN_STATEMENT[success],
         fail_statement=FAIL_STATEMENT[fail],
     )
-    contract = compile_source(source, vyper_version="0.2.11").Vyper
+    contract = compile_source(source, vyper_version="0.2.12").Vyper
 
     if deployer is None:
         tx_params = {"from": "0x0000000000000000000000000000000000001337", "silent": True}
