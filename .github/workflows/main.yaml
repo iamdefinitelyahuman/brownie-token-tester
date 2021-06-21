@@ -1,7 +1,9 @@
 on: ["push", "pull_request"]
 
 env:
+  ETHERSCAN_TOKEN: 9MKURTHE8FNA9NRUUJBHMUEVY6IQ5K1EGY
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  WEB3_INFURA_PROJECT_ID: 44c6300c5e5b4b2da5fc42b06bf18a8e
 
 name: main workflow
 
@@ -29,17 +31,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
         python-minor: [6, 7, 8]
 
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache Compiler Installations
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.solcx
+          ~/.vvm
+        key: compiler-cache-${{ matrix.os }}
+
     - name: Setup Node.js
       uses: actions/setup-node@v1
 
     - name: Install Ganache
-      run: npm install -g ganache-cli@6.11.0
+      run: npm install -g ganache-cli@6.12.1
 
     - name: Setup Python 3.${{ matrix.python-minor }}
       uses: actions/setup-python@v2
