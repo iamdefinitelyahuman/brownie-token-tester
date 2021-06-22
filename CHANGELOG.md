@@ -6,6 +6,9 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
+### Changed
+- Added `skip_holders` feature to skip some holders in default minting process.
+- Added `$ETHPLORER_API_KEY` to use custom key.
 
 ## [0.2.2](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.2.2) - 2021-06-01
 

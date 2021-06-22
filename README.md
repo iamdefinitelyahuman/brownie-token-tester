@@ -75,7 +75,7 @@ This method increases the balance of `target` by `amount`. It may be called by a
 
 `MintableForkToken` is used to standardize the process of minting tokens when working in a [forked mainnet](https://eth-brownie.readthedocs.io/en/stable/network-management.html#using-a-forked-development-network) environment. The `MintableForkToken` class inherits from and may be used interchangeably with the [`Contract`](https://eth-brownie.readthedocs.io/en/stable/api-network.html#contract-and-projectcontract) class. It exposes one additional method, `_mint_for_testing`, with the same API as given above.
 
-For tokens where [custom logic is implemented](https://github.com/iamdefinitelyahuman/brownie-token-tester/blob/master/brownie_tokens/forked.py#L52), this is an actual minting event. For most tokens, the "minting" process involves a query to the [Ethplorer API](https://github.com/EverexIO/Ethplorer/wiki/Ethplorer-API#get-top-token-holders) to get a list of top token holders, and then transferring their balances to `target`.
+For tokens where [custom logic is implemented](https://github.com/iamdefinitelyahuman/brownie-token-tester/blob/master/brownie_tokens/forked.py#L52), this is an actual minting event. For most tokens, the "minting" process involves a query to the [Ethplorer API](https://github.com/EverexIO/Ethplorer/wiki/Ethplorer-API#get-top-token-holders) to get a list of top token holders, and then transferring their balances to `target`. If you want to exclude some holders from this process use `skip_holders(*addresses)`. If you have too many requests at a time set `$ETHPLORER_API_KEY`(see [ethplorer.io](https://ethplorer.io)) as environment variable.
 
 Tokens for which custom logic is currently implemented:
 
