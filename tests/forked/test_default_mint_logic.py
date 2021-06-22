@@ -1,4 +1,4 @@
-from brownie import Wei
+from brownie import ZERO_ADDRESS, Wei
 
 from brownie_tokens import MintableForkToken, skip_holders
 from brownie_tokens.forked import _token_holders
@@ -16,7 +16,8 @@ def test_skip_list(alice):
     initial_balances = [token.balanceOf(holder) for holder in holders]
 
     # Should remove addresses from current lists
-    skip_holders(*holders)
+    # ZERO_ADDRESS to check address that is not in _token_holders
+    skip_holders(*holders, ZERO_ADDRESS)
     token._mint_for_testing(alice, 10 ** 6)
     for holder, initial_balance in zip(holders, initial_balances):
         assert token.balanceOf(holder) == initial_balance

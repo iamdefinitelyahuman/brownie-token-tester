@@ -18,6 +18,5 @@ def test_ethplorer_error(alice, invalid_ethplorer_key):
     ethplorer_error = {"code": 1, "message": "Invalid API key"}
 
     token = MintableForkToken(token_address_default)
-    with pytest.raises(BrownieTokensError, match=f"Ethplorer returned error: {ethplorer_error}.*"):
+    with pytest.raises(BrownieTokensError, match=f"Ethplorer returned error: {ethplorer_error}."):
         token._mint_for_testing(alice, 10 ** 6)
-        assert False, "Should fail with Ethplorer request error."
