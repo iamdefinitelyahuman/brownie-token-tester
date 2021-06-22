@@ -19,8 +19,7 @@ class BrownieTokensError(Exception):
 
 def update_skipped_addresses(token: Optional[str] = None) -> None:
     if token:
-        for address in _skip_list:
-            _token_holders[token].remove(address)
+        _token_holders[token] = [a for a in _token_holders[token] if a not in _skip_list]
     else:
         for token in _token_holders:
             update_skipped_addresses(token)
