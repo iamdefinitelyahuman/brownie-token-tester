@@ -6,7 +6,10 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
-- `skip_holders` bug(removing non-existing address from a list)
+
+## [0.3.1](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.1) - 2021-06-23
+### Fixed
+- `skip_holders` bug (removing non-existing address from a list)
 
 ## [0.3.0](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.0) - 2021-06-22
 ### Added
