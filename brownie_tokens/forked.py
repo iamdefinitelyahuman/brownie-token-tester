@@ -1,7 +1,7 @@
 import os
 import requests
 import sys
-from brownie import Contract, Wei
+from brownie import Contract, Wei, web3
 from brownie.convert import to_address
 from typing import Dict, List, Optional
 
@@ -139,7 +139,7 @@ def mint_0xdB25f211AB05b1c97D595516F45794528a807ad8(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
     # EURS
-    owner = "0x2EbBbc541E8f8F24386FA319c79CedA0579f1Efb"
+    owner = web3.eth.getStorageAt(token.address, 2)[-20:].hex()
     token.createTokens(amount, {"from": owner})
     token.transfer(target, amount, {"from": owner})
 
