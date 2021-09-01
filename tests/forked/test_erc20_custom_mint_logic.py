@@ -1,6 +1,5 @@
 import itertools
 import pytest
-from brownie import Contract
 
 import brownie_tokens
 from brownie_tokens import MintableForkToken
@@ -9,7 +8,7 @@ tokens = [f.split("_")[1] for f in dir(brownie_tokens.forked) if f[:4] == "mint"
 
 
 def ERC20(address: str) -> MintableForkToken:
-    return MintableForkToken(Contract.from_explorer(address))
+    return MintableForkToken(address)
 
 
 @pytest.mark.parametrize("amount,address", list(itertools.product([1e24], tokens)))

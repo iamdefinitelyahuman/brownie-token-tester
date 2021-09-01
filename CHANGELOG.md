@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
 
+## [0.3.2](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.2) - 2021-07-06
+### Fixed
+- pull EURS minter via `eth_getStorageAt`
+- allow mixing returns `None` with revert
+
+## [0.3.1](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.1) - 2021-06-23
+### Fixed
+- `skip_holders` bug (removing non-existing address from a list)
+
+## [0.3.0](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.0) - 2021-06-22
+### Added
+- Added `skip_holders` feature to skip some holders in default minting process.
+- Added `$ETHPLORER_API_KEY` to use custom key.
+
 ## [0.2.2](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.2.2) - 2021-06-01
 
 ### Changed
