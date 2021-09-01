@@ -128,6 +128,14 @@ def mint_0xE95A203B1a91a908F9B9CE46459d101078c2c3cb(
     token.mint(target, amount, {"from": owner})
 
 
+def mint_0xD533a949740bb3306d119CC777fa900bA034cd52(
+    token: MintableForkToken, target: str, amount: int
+) -> None:
+    # CRV
+    minter = token.minter()
+    token.mint(target, amount, {"from": minter})
+
+
 def mint_0x6B175474E89094C44Da98b954EedeAC495271d0F(
     token: MintableForkToken, target: str, amount: int
 ) -> None:
@@ -233,6 +241,7 @@ def mint_0x9559Aaa82d9649C7A7b220E7c461d2E74c9a3593(
     MINTER_ROLE = "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6"
     minter = token.getRoleMember(MINTER_ROLE, 0)
     token.mint(target, amount, {"from": minter})
+
 
 
 # To add custom minting logic for a token that starts with [NAME], add [NAME] to `_token_names`
