@@ -49,6 +49,17 @@ event Transfer:
     _value: uint256
 
 
+{% if use_eip2612 is true %}
+EIP712_TYPEHASH: constant(bytes32) = keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)")
+PERMIT_TYPEHASH: constant(bytes32) = keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)")
+VERSION: constant(String[8]) = "v0.1.0"
+{% endif %}
+
+
+{% if use_eip2612 is true %}
+DOMAIN_SEPARATOR: immutable(bytes32)
+{% endif %}
+
 NAME: immutable(String[128])
 SYMBOL: immutable(String[64])
 DECIMALS: immutable(uint8)
@@ -58,12 +69,22 @@ allowance: public(HashMap[address, HashMap[address, uint256]])
 balanceOf: public(HashMap[address, uint256])
 totalSupply: public(uint256)
 
+{% if use_eip2612 is true %}
+nonces: public(HashMap[address, uint256])
+{% endif %}
+
 
 @external
 def __init__(_name: String[128], _symbol: String[64], _decimals: uint8):
     NAME = _name
     SYMBOL = _symbol
     DECIMALS = _decimals
+
+    {% if use_eip2612 is true %}
+    DOMAIN_SEPARATOR = keccak256(
+        _abi_encode(EIP712_TYPEHASH, keccak256(_name), keccak256(VERSION), chain.id, self)
+    )
+    {% endif %}
 
 
 @external
@@ -80,6 +101,49 @@ def approve(_spender: address, _value: uint256){{ return_type(retval) }}:
     log Approval(msg.sender, _spender, _value)
     {{ return_statement(retval)|trim }}
 
+{% if use_eip2612 is true %}
+
+@external
+def permit(
+    _owner: address,
+    _spender: address,
+    _value: uint256,
+    _deadline: uint256,
+    _v: uint8,
+    _r: bytes32,
+    _s: bytes32
+):
+    """
+    @notice Approves spender by owner's signature to expend owner's tokens.
+        See https://eips.ethereum.org/EIPS/eip-2612.
+    @param _owner The address which is a source of funds and has signed the Permit.
+    @param _spender The address which is allowed to spend the funds.
+    @param _value The amount of tokens to be spent.
+    @param _deadline The timestamp after which the Permit is no longer valid.
+    @param _v The bytes[64] of the valid secp256k1 signature of permit by owner
+    @param _r The bytes[0:32] of the valid secp256k1 signature of permit by owner
+    @param _s The bytes[32:64] of the valid secp256k1 signature of permit by owner
+    """
+    assert _owner != ZERO_ADDRESS
+    assert block.timestamp <= _deadline
+
+    nonce: uint256 = self.nonces[_owner]
+    digest: bytes32 = keccak256(
+        concat(
+            b"\x19\x01",
+            DOMAIN_SEPARATOR,
+            keccak256(_abi_encode(PERMIT_TYPEHASH, _owner, _spender, _value, nonce, _deadline))
+        )
+    )
+
+    assert ecrecover(digest, convert(_v, uint256), convert(_r, uint256), convert(_s, uint256)) == _owner
+
+    self.allowance[_owner][_spender] = _value
+    self.nonces[_owner] = nonce + 1
+
+    log Approval(_owner, _spender, _value)
+
+{% endif %}
 
 @external
 def transfer(_to: address, _value: uint256){{ return_type(retval) }}:
@@ -109,7 +173,7 @@ def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(re
     """
     {# input validation is handled prior to template rendering #}
     {% if failval is boolean %}
-    allowance: uint256 = self.allowance[msg.sender]
+    allowance: uint256 = self.allowance[_from][msg.sender]
     if allowance < _value:
         {% if failval is true %}
         return True
@@ -119,11 +183,11 @@ def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(re
 
     {{ validate_transfer(failval, "_from")|indent|trim }}
     self.balanceOf[_to] += _value
-    self.allowance[msg.sender] = allowance - _value
+    self.allowance[_from][msg.sender] = allowance - _value
     {% else %}
     {{ validate_transfer(failval, "_from")|indent|trim }}
     self.balanceOf[_to] += _value
-    self.allowance[msg.sender] -= _value
+    self.allowance[_from][msg.sender] -= _value
     {% endif %}
 
     log Transfer(_from, _to, _value)
@@ -166,3 +230,23 @@ def decimals() -> uint8:
     @notice Query the decimals of the token.
     """
     return DECIMALS
+
+
+{% if use_eip2612 is true %}
+@view
+@external
+def DOMAIN_SEPARATOR() -> bytes32:
+    """
+    @notice Query the DOMAIN_SEPARATOR immutable value
+    """
+    return DOMAIN_SEPARATOR
+
+
+@view
+@external
+def version() -> String[8]:
+    """
+    @notice Query the contract version, used for EIP-2612
+    """
+    return VERSION
+{% endif %}

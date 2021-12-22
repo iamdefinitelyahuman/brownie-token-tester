@@ -17,6 +17,7 @@ def ERC20(
     success: Union[bool, None] = True,
     fail: Union[bool, str, None] = "revert",
     deployer: Union[Account, str, None] = None,
+    use_eip2612: bool = False,
 ) -> Contract:
     """
     Deploy an ERC20 contract for testing purposes.
@@ -36,6 +37,8 @@ def ERC20(
         to make the transaction revert.
     deployer: Account | str, optional
         Address to deploy the contract from.
+    use_eip2612: bool, optional
+        Include EIP-2612 (permit) support in the resulting contract
 
     Returns
     -------
@@ -52,7 +55,7 @@ def ERC20(
 
     # fetch and render template
     template = env.get_template("ERC20.vy")
-    src = template.render(retval=success, failval=fail)
+    src = template.render(retval=success, failval=fail, use_eip2612=use_eip2612)
 
     ERC20 = compile_source(src, vyper_version="0.3.1").Vyper
 
