@@ -1,4 +1,5 @@
-{% macro return_type(retval) %}{% if retval is boolean %} -> bool {%- endif %}{% endmacro %}
+{% macro return_type(retval) %}{% if retval is boolean %} -> bool {%- endif %}{% endmacro -%}
+
 {% macro return_statement(retval) %}
 {% if retval is true %}
 return True
@@ -7,7 +8,26 @@ return False
 {% else %}
 return
 {% endif %}
-{% endmacro %}
+{% endmacro -%}
+
+{# failval should be either boolean or string #}
+{# from should be either `msg.sender` or `_from` #}
+{% macro validate_transfer(failval, from) %}
+{% if failval is boolean %}
+user_balance: uint256 = self.balanceOf[{{ from }}]
+if user_balance < _value:
+    {% if failval is true %}
+    return True
+    {% else %}
+    return False
+    {% endif %}
+
+self.balanceOf[{{ from }}] = user_balance - _value
+{% else %}
+self.balanceOf[{{ from }}] -= _value
+{% endif %}
+{% endmacro -%}
+
 # @version 0.3.1
 """
 @notice Mock ERC20
@@ -58,7 +78,7 @@ def approve(_spender: address, _value: uint256){{ return_type(retval) }}:
     self.allowance[msg.sender][_spender] = _value
 
     log Approval(msg.sender, _spender, _value)
-    {{ return_statement(retval) }}
+    {{ return_statement(retval)|trim }}
 
 
 @external
@@ -69,11 +89,12 @@ def transfer(_to: address, _value: uint256){{ return_type(retval) }}:
     @param _to The address to increase the balance of.
     @param _value The amount of tokens to transfer.
     """
-    self.balanceOf[msg.sender] -= _value
+    {# input validation is handled prior to template rendering #}
+    {{ validate_transfer(failval, "msg.sender")|indent|trim }}
     self.balanceOf[_to] += _value
 
     log Transfer(msg.sender, _to, _value)
-    {{ return_statement(retval) }}
+    {{ return_statement(retval)|trim }}
 
 
 @external
@@ -86,13 +107,27 @@ def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(re
     @param _to The account to transfer tokens to.
     @param _value The amount of tokens to transfer.
     """
-    self.allowance[_from][msg.sender] -= _value
+    {# input validation is handled prior to template rendering #}
+    {% if failval is boolean %}
+    allowance: uint256 = self.allowance[msg.sender]
+    if allowance < _value:
+        {% if failval is true %}
+        return True
+        {% else %}
+        return False
+        {% endif %}
 
-    self.balanceOf[_from] -= _value
+    {{ validate_transfer(failval, "_from")|indent|trim }}
     self.balanceOf[_to] += _value
+    self.allowance[msg.sender] = allowance - _value
+    {% else %}
+    {{ validate_transfer(failval, "_from")|indent|trim }}
+    self.balanceOf[_to] += _value
+    self.allowance[msg.sender] -= _value
+    {% endif %}
 
     log Transfer(_from, _to, _value)
-    {{ return_statement(retval) }}
+    {{ return_statement(retval)|trim }}
 
 
 @view
