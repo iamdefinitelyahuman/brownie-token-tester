@@ -1,4 +1,14 @@
-# @version >=0.3.1
+{% macro return_type(retval) %}{% if retval is boolean %} -> bool {%- endif %}{% endmacro %}
+{% macro return_statement(retval) %}
+{% if retval is true %}
+return True
+{% elif retval is false %}
+return False
+{% else %}
+return
+{% endif %}
+{% endmacro %}
+# @version 0.3.1
 """
 @notice Mock ERC20
 @dev See https://eips.ethereum.org/EIPS/eip-20
@@ -37,7 +47,7 @@ def __init__(_name: String[128], _symbol: String[64], _decimals: uint8):
 
 
 @external
-def approve(_spender: address, _value: uint256) -> bool:
+def approve(_spender: address, _value: uint256){{ return_type(retval) }}:
     """
     @notice Allow `_spender` to transfer/withdraw from your account multiple times, up to `_value`
         amount.
@@ -48,11 +58,11 @@ def approve(_spender: address, _value: uint256) -> bool:
     self.allowance[msg.sender][_spender] = _value
 
     log Approval(msg.sender, _spender, _value)
-    return True
+    {{ return_statement(retval) }}
 
 
 @external
-def transfer(_to: address, _value: uint256) -> bool:
+def transfer(_to: address, _value: uint256){{ return_type(retval) }}:
     """
     @notice Transfer `_value` amount of tokens to address `_to`.
     @dev Reverts if caller's balance does not have enough tokens to spend.
@@ -63,11 +73,11 @@ def transfer(_to: address, _value: uint256) -> bool:
     self.balanceOf[_to] += _value
 
     log Transfer(msg.sender, _to, _value)
-    return True
+    {{ return_statement(retval) }}
 
 
 @external
-def transferFrom(_from: address, _to: address, _value: uint256) -> bool:
+def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(retval) }}:
     """
     @notice Transfers ~_value` amount of tokens from address `_from` to address `_to`.
     @dev Reverts if caller's allowance is not enough, or if `_from` address does not have a balance
@@ -82,7 +92,7 @@ def transferFrom(_from: address, _to: address, _value: uint256) -> bool:
     self.balanceOf[_to] += _value
 
     log Transfer(_from, _to, _value)
-    return True
+    {{ return_statement(retval) }}
 
 
 @view
