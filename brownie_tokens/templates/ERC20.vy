@@ -130,6 +130,17 @@ def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(re
     {{ return_statement(retval)|trim }}
 
 
+@external
+def _mint_for_testing(_to: address, _value: uint256):
+    """
+    @notice Mint new tokens
+    """
+    self.balanceOf[_to] += _value
+    self.totalSupply += _value
+
+    log Transfer(ZERO_ADDRESS, _to, _value)
+
+
 @view
 @external
 def name() -> String[128]:
