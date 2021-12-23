@@ -53,6 +53,12 @@ def ERC20(
     if isinstance(fail, str) and fail.lower() != "revert":
         raise ValueError(f"Argument `fail` has invalid value: '{fail}'")
 
+    if success is None and isinstance(fail, bool) or fail is None and isinstance(success, bool):
+        raise ValueError(
+            "Return values for `success` and `fail` are incompatible: "
+            + f"success=`{success}`, fail=`{fail}`"
+        )
+
     # fetch and render template
     template = env.get_template("ERC20.vy")
     src = template.render(retval=success, failval=fail, use_eip2612=use_eip2612)
