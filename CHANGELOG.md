@@ -6,6 +6,7 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/iamdefinitelyahuman/brownie-token-tester)
+- Use Jinja2 for templating ERC20 contract, add support for eip-2612 permit function
 
 ## [0.3.2](https://github.com/iamdefinitelyahuman/brownie-token-tester/tree/v0.3.2) - 2021-07-06
 ### Fixed
