@@ -57,11 +57,14 @@ def ERC20(
     decimals: int = 18,
     success: Union[bool, None] = True,
     fail: Union[bool, str, None] = "revert",
+    use_eip2612: bool = False,
 ) -> Contract:
 ```
 
 - The `success` kwarg is used to set the token's return value upon a successful call to `approve`, `transfer` or `transferFrom`. Valid values are `True`, `False`, and `None`.
 - The `fail` kwarg sets the token's behaviour upon failed calls to the above methods. Use `"revert"` if the transaction should revert, or `True`, `False`, and `None` to return a value without reverting.
+- The `use_eip2612` kwarg determines whether the token should support the `permit` function defined in `eip-2612`
+
 
 The resulting deployment adheres to the [ERC20 Token Standard](https://eips.ethereum.org/EIPS/eip-20) and additionally implements one non-standard method:
 
