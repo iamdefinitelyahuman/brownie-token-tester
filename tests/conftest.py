@@ -56,5 +56,10 @@ def bob():
 
 
 @pytest.fixture(scope="session")
+def charlie():
+    yield brownie.accounts[2]
+
+
+@pytest.fixture(scope="session")
 def accounts():
     return brownie.accounts
