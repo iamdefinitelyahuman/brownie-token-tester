@@ -13,13 +13,15 @@ return
 {# failval should be either boolean or string #}
 {# from should be either `msg.sender` or `_from` #}
 {% macro validate_transfer(failval, from) %}
-{% if failval is boolean %}
+{% if failval is boolean or failval is none %}
 user_balance: uint256 = self.balanceOf[{{ from }}]
 if user_balance < _value:
     {% if failval is true %}
     return True
-    {% else %}
+    {% elif failval is false %}
     return False
+    {% else %}
+    return
     {% endif %}
 
 self.balanceOf[{{ from }}] = user_balance - _value
@@ -172,13 +174,15 @@ def transferFrom(_from: address, _to: address, _value: uint256){{ return_type(re
     @param _value The amount of tokens to transfer.
     """
     {# input validation is handled prior to template rendering #}
-    {% if failval is boolean %}
+    {% if failval is boolean or failval is none %}
     allowance: uint256 = self.allowance[_from][msg.sender]
     if allowance < _value:
         {% if failval is true %}
         return True
-        {% else %}
+        {% elif failval is false %}
         return False
+        {% else %}
+        return
         {% endif %}
 
     {{ validate_transfer(failval, "_from")|indent|trim }}
