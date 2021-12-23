@@ -37,7 +37,7 @@ def mod_isolation():
 
 
 @pytest.fixture(autouse=True)
-def isolation(chain, history):
+def isolation():
     start = len(brownie.history)
     yield
     end = len(brownie.history)
@@ -53,3 +53,8 @@ def alice():
 @pytest.fixture(scope="session")
 def bob():
     yield brownie.accounts[1]
+
+
+@pytest.fixture(scope="session")
+def accounts():
+    return brownie.accounts
