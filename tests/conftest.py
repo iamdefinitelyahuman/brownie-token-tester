@@ -29,11 +29,20 @@ def pytest_ignore_collect(path, config):
         return True
 
 
-@pytest.fixture(scope="function", autouse=True)
-def isolation():
+@pytest.fixture(scope="module", autouse=True)
+def mod_isolation():
     brownie.chain.snapshot()
     yield
     brownie.chain.revert()
+
+
+@pytest.fixture(autouse=True)
+def isolation():
+    start = len(brownie.history)
+    yield
+    end = len(brownie.history)
+    if end - start > 0:
+        brownie.chain.undo(end - start)
 
 
 @pytest.fixture(scope="session")
@@ -44,3 +53,13 @@ def alice():
 @pytest.fixture(scope="session")
 def bob():
     yield brownie.accounts[1]
+
+
+@pytest.fixture(scope="session")
+def charlie():
+    yield brownie.accounts[2]
+
+
+@pytest.fixture(scope="session")
+def accounts():
+    return brownie.accounts
