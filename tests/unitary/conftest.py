@@ -15,6 +15,9 @@ def fail_retval(request):
 
 @pytest.fixture(scope="module")
 def token(alice, success_retval, fail_retval):
-    contract = ERC20(success=success_retval, fail=fail_retval)
-    contract._mint_for_testing(alice, 10 ** 21, {"from": alice})
-    return contract
+    case_a = success_retval is None and isinstance(fail_retval, bool)
+    case_b = fail_retval is None and isinstance(success_retval, bool)
+    if case_a or case_b:
+        pytest.xfail()
+
+    return ERC20(success=success_retval, fail=fail_retval)
